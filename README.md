@@ -4,18 +4,31 @@ Tīmekļa lietotne Datu Struktūru apguvei
 
 ## Prasības
 
-  * Ruby 1.9+
-  * [Node.js](http://nodejs.org)
-  * [compass](http://compass-style.org/): `gem install compass`
-  * [bower](http://bower.io): `npm install bower -g`
+  * [Git](http://git-scm.com/)
+  * [Node.js](http://nodejs.org/) (ar NPM)
+  * [Bower](http://bower.io/): `npm install bower -g`
+  * [Ember CLI](http://www.ember-cli.com/)
+  * [PhantomJS](http://phantomjs.org/)
 
-## Izstrāde
+## Uzstādīšana
 
-Lai sakompilētu SCSS izpildi
+  * `npm install`
+  * `bower install`
 
-```bash
-bundle exec compass watch
-```
+## Palaišana
+
+  * `ember server`
+  * Skaties lietojumu [http://localhost:4200](http://localhost:4200).
+
+### Testi
+
+  * `ember test`
+  * `ember test --server`
+
+### Kompilēšana
+
+  * `ember build` (izstrāde)
+  * `ember build --environment production` (produkcija)
 
 ## Atjaunināšana
 
