@@ -1,3 +1,15 @@
-<h2 id="title">Welcome to Ember</h2>
 
-{{outlet}}
+<nav class="breadcrumbs">
+    {{link-to "Datu Struktūras" "index"}}
+    {{#unless irSakums}}
+        {{link-to struktura.nosaukums struktura.id}}
+    {{/unless}}
+</nav>
+
+<section role="main">
+    <div class="row">
+        <div class="small-12 columns">
+            {{outlet}}
+        </div>
+    </div>
+</section>
