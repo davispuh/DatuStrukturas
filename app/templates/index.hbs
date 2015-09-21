@@ -1,0 +1,10 @@
+<ul class="small-block-grid-2">
+    {{#each model as |struktura|}}
+        <li>
+            {{#link-to struktura.id}}<img src="http://placehold.it/400x400&amp;text={{struktura.nosaukums}}" />{{/link-to}}
+            <h2>{{link-to struktura.nosaukums struktura.id}}</h2>
+        </li>
+    {{/each}}
+</ul>
+
+{{outlet}}
