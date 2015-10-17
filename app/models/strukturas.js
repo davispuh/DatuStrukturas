@@ -1,16 +1,36 @@
 
 var Strukturas = [
     {
+        id: "vienkars_saraksts",
+        nosaukums: "Vienkāršsaistīts saraksts"
+    },
+    {
+        id: "divkars_saraksts",
+        nosaukums: "Divkāršsaistīts saraksts"
+    },
+    {
         id: "steks",
         nosaukums: "Steks"
     },
     {
-        id: "deks",
-        nosaukums: "Deks"
+        id: "rinda",
+        nosaukums: "Rinda"
     },
     {
-        id: "saraksts",
-        nosaukums: "Saistīts saraksts"
+        id: "kaudze",
+        nosaukums: "Kaudze"
+    },
+    {
+        id: "binars_koks",
+        nosaukums: "Binārs koks"
+    },
+    {
+        id: "avl_koks",
+        nosaukums: "AVL koks"
+    },
+    {
+        id: "meklesanas_koks",
+        nosaukums: "Meklēšanas koks"
     }
 ];
 
