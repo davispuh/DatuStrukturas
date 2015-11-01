@@ -6,6 +6,6 @@ export default Ember.Controller.extend({
         return (this.get('currentRouteName') === 'index');
     }),
     struktura: Ember.computed('currentRouteName', function() {
-        return Strukturas.filterBy('id', this.get('currentRouteName'))[0];
+        return Strukturas.filterBy('id', this.get('params').struktura)[0];
     })
 });

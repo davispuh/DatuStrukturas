@@ -7,9 +7,7 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-    for (var i = 0; i < Strukturas.length; i++) {
-        this.route(Strukturas[i].id);
-    }
+    this.route('struktura', { path: '/:struktura' });
 });
 
 export default Router;
