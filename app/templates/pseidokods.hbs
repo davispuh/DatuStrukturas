@@ -1,0 +1,18 @@
+
+<pre><code class="fortran">For I = 1 to N-1 do:
+       K = I
+       For J = I + 1 to N-1 do:
+         If A(J) &lt; A(K)
+           K = J
+         End-If
+       End-For
+       Temp = A(I)
+       A(I) = A(K)
+       A(K) = Temp
+End-For</code></pre>
+
+<script>
+    $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+</script>
