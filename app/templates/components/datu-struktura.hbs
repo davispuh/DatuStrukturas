@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="small-6 columns">
+        <div class="row">
+            <ul class="side-nav">
+                <li class="row collapse">
+                    <div class="small-4 columns">{{input value=elementi maxlength=4}}</div>
+                    <div class="small-8 columns"><a {{action "izveidot"}} class="button postfix">Izveidot</a></div>
+                </li>
+                <li class="row collapse">
+                    <div class="small-3 columns">{{input value=pievienotVertiba}}</div>
+                    <div class="small-3 columns">
+                        <select onchange={{action (mut pievienotPozicija) value="target.value"}}>
+                        {{#each pozicijas as |pozicija|}}
+                            <option value={{pozicija}}>{{pozicija}}</option>
+                        {{/each}}
+                        </select>
+                    </div>
+                    <div class="small-6 columns"><a {{action "pievienot"}} class="button postfix">Pievienot elementu</a></div>
+                </li>
+                <li class="row collapse">
+                    <div class="small-6 columns">
+                        <select onchange={{action (mut kartosana) value="target.value"}}>
+                        {{#each algoritmi as |algoritms|}}
+                            <option value={{algoritms}}>{{algoritms}}</option>
+                        {{/each}}
+                        </select>
+                    </div>
+                    <div class="small-6 columns"><a {{action "kartot"}} class="button postfix">Kārtot</a></div>
+                </li>
+                <li class="row collapse">
+                    <div class="small-3 columns">{{input value=dzestVertiba}}</div>
+                    <div class="small-3 columns">
+                        <select onchange={{action (mut dzestVeids) value="target.value"}}>
+                        {{#each veidi as |veids|}}
+                            <option value={{veids}}>{{veids}}</option>
+                        {{/each}}
+                        </select>
+                    </div>
+                    <div class="small-6 columns"><a {{action "dzest"}} class="button postfix">Dzēst elementu</a></div>
+                </li>
+                <li class="row collapse">
+                    <div class="small-3 columns">{{input value=dzestVertiba}}</div>
+                    <div class="small-3 columns">
+                        <select onchange={{action (mut meklesana) value="target.value"}}>
+                        {{#each meklesanasVeids as |veids|}}
+                            <option value={{veids}}>{{veids}}</option>
+                        {{/each}}
+                        </select>
+                    </div>
+                    <div class="small-6 columns"><a {{action "meklet"}} class="button postfix">Meklēt elementu</a></div>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="small-12 columns">
+            </div>
+        </div>
+    </div>
+    <div class="small-6 columns">
+        <canvas id="attels" width="900" height="600"></canvas>
+    </div>
+</div>
+
+{{yield}}
