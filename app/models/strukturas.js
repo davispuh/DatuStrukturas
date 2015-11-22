@@ -251,10 +251,33 @@ Strukturas[c++].izveidot = function(elementi) {
 };
 
 Strukturas[c++].izveidot = function(elementi) {
-    this.struktura = null;
-    this.pievienot = function(vertiba, sakuma) {
+    this.struktura = [];
+    var objekts = this;
+    this.elements = function(vertiba) {
+        this.vertiba = vertiba;
+        this.zimejums = [];
     };
+    this.pievienot = function(vertiba, sakuma) {
+        if (sakuma) {
+            objekts.struktura.unshift(new objekts.elements(vertiba));
+        } else {
+            objekts.struktura.push(new objekts.elements(vertiba));
+        }
+    };
+    for (var i = 0; i < elementi; i++) {
+        objekts.pievienot(dabutVertibu(), false);
+    }
     this.zimet = function(attels, ramis, teksts, linija) {
+        for (var i = 0; i < objekts.struktura.length; i++) {
+            ramis.left = 50 + (ramis.width + 2) * i;
+            teksts.setText(objekts.struktura[i].vertiba.toString());
+            teksts.left = ramis.left + (ramis.width / 4);
+            attels.add(ramis);
+            attels.add(teksts);
+            objekts.struktura[i].zimejums = [ramis, teksts];
+            ramis = window.fabric.util.object.clone(ramis);
+            teksts = window.fabric.util.object.clone(teksts);
+        }
     };
     return this;
 };
