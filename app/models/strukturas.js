@@ -283,10 +283,55 @@ Strukturas[c++].izveidot = function(elementi) {
 };
 
 Strukturas[c++].izveidot = function(elementi) {
-    this.struktura = null;
-    this.pievienot = function(vertiba, sakuma) {
+    this.struktura = [];
+    var objekts = this;
+    this.elements = function(vertiba) {
+        this.vertiba = vertiba;
+        this.zimejums = [];
     };
+    this.pievienot = function(vertiba, sakuma) {
+        if (sakuma) {
+            objekts.struktura.unshift(new objekts.elements(vertiba));
+        } else {
+            objekts.struktura.push(new objekts.elements(vertiba));
+            var idx = objekts.struktura.length - 1;
+            var elem = objekts.struktura[idx];
+            var virsas_idx = Math.floor((idx - 1) / 2);
+            while (idx > 0 && elem.vertiba > objekts.struktura[virsas_idx].vertiba) {
+                var tmp = elem.vertiba;
+                elem.vertiba = objekts.struktura[virsas_idx].vertiba;
+                objekts.struktura[virsas_idx].vertiba = tmp;
+                elem = objekts.struktura[virsas_idx];
+                idx = Math.floor((idx - 1) / 2);
+            }
+        }
+    };
+    for (var i = 0; i < elementi; i++) {
+        objekts.pievienot(dabutVertibu(), false);
+    }
     this.zimet = function(attels, ramis, teksts, linija) {
+        for (var i = 0; i < objekts.struktura.length; i++) {
+            var rinda = Math.floor(Math.log(i + 1) / Math.LN2);
+            ramis.top = 50 + (ramis.height + 20) * rinda;
+            if (i === 0) {
+                ramis.left = attels.width / 2;
+            } else {
+                ramis.left = objekts.struktura[Math.floor((i - 1) / 2)].zimejums[0].left;
+                var nobide = attels.width / (Math.pow(2, rinda + 1));
+                if (i % 2 === 0) {
+                   nobide *= -1;
+                }
+                ramis.left -= nobide;
+            }
+            teksts.top = ramis.top + ramis.height / 4;
+            teksts.left = ramis.left + ramis.width / 4;
+            teksts.setText(objekts.struktura[i].vertiba.toString());
+            attels.add(ramis);
+            attels.add(teksts);
+            objekts.struktura[i].zimejums = [ramis, teksts];
+            ramis = window.fabric.util.object.clone(ramis);
+            teksts = window.fabric.util.object.clone(teksts);
+        }
     };
     return this;
 };
