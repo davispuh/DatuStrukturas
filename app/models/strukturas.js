@@ -297,12 +297,16 @@ Strukturas[c++].izveidot = function(elementi) {
             var idx = objekts.struktura.length - 1;
             var elem = objekts.struktura[idx];
             var virsas_idx = Math.floor((idx - 1) / 2);
-            while (idx > 0 && elem.vertiba > objekts.struktura[virsas_idx].vertiba) {
-                var tmp = elem.vertiba;
-                elem.vertiba = objekts.struktura[virsas_idx].vertiba;
-                objekts.struktura[virsas_idx].vertiba = tmp;
+            while (virsas_idx >= 0) {
+                if (elem.vertiba > objekts.struktura[virsas_idx].vertiba) {
+                    var tmp = elem.vertiba;
+                    elem.vertiba = objekts.struktura[virsas_idx].vertiba;
+                    objekts.struktura[virsas_idx].vertiba = tmp;
+                } else {
+                    break;
+                }
                 elem = objekts.struktura[virsas_idx];
-                idx = Math.floor((idx - 1) / 2);
+                virsas_idx = Math.floor((virsas_idx - 1) / 2);
             }
         }
     };
