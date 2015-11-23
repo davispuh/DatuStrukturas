@@ -32,9 +32,10 @@ export default Ember.Component.extend({
     platums: 1000,
     garums: 800,
     elementi: 6,
+    pievienotVertiba: Math.round(Math.random() * 99),
     struktura: null,
-    pozicijas: ['Sākumā', 'Beigās'],
-    pievienotPozicija: 'Sākumā',
+    pozicijas: ['Beigās', 'Sākumā'],
+    pievienotPozicija: 'Beigās',
     algoritmi: ['Izvēles šķirošana', 'Iestarpinājuma šķirošanas', 'Burbuļa metode'],
     kartosana: 'Izvēles šķirošana',
     veidi: ['Indekss', 'Vērtība'],
@@ -54,6 +55,10 @@ export default Ember.Component.extend({
             this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
         },
         pievienot() {
+            this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pievienotPozicija === 'Sākumā');
+            this.set('pievienotVertiba', Math.round(Math.random() * 99));
+            this.attels.clear();
+            this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
         },
         kartot() {
         },

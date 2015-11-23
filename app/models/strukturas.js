@@ -64,21 +64,24 @@ Strukturas[c++].izveidot = function(elementi) {
             fn(elem);
         }
     };
-    this.iegutElementu = function(sakuma) {
-        if (sakuma) {
-            return objekts.struktura;
-        } else {
-            var elem = objekts.struktura;
-            while (elem.nakosais) {
-                elem = elem.nakosais;
-            }
-            return elem;
+    this.iegutBeigas = function() {
+        var elem = objekts.struktura;
+        while (elem.nakosais) {
+            elem = elem.nakosais;
         }
+        return elem;
     };
     this.pievienot = function(vertiba, sakuma) {
         if (objekts.struktura) {
-            var elem = objekts.iegutElementu(sakuma);
-            elem.nakosais = new objekts.elements(vertiba);
+            var elem;
+            if (sakuma) {
+                elem = objekts.struktura;
+                objekts.struktura = new objekts.elements(vertiba);
+                objekts.struktura.nakosais = elem;
+            } else {
+                elem = objekts.iegutBeigas();
+                elem.nakosais = new objekts.elements(vertiba);
+            }
         } else {
             objekts.struktura = new objekts.elements(vertiba);
         }
@@ -139,22 +142,26 @@ Strukturas[c++].izveidot = function(elementi) {
             fn(elem);
         }
     };
-    this.iegutElementu = function(sakuma) {
-        if (sakuma) {
-            return objekts.struktura;
-        } else {
-            var elem = objekts.struktura;
-            while (elem.nakosais) {
-                elem = elem.nakosais;
-            }
-            return elem;
+    this.iegutBeigas = function(sakuma) {
+        var elem = objekts.struktura;
+        while (elem.nakosais) {
+            elem = elem.nakosais;
         }
+        return elem;
     };
     this.pievienot = function(vertiba, sakuma) {
         if (objekts.struktura) {
-            var elem = objekts.iegutElementu(sakuma);
-            elem.nakosais = new objekts.elements(vertiba);
-            elem.nakosais.ieprieksejais = elem;
+            var elem;
+            if (sakuma) {
+                elem = objekts.struktura;
+                objekts.struktura = new objekts.elements(vertiba);
+                objekts.struktura.nakosais = elem;
+                elem.ieprieksejais = objekts.struktura;
+            } else {
+                elem = objekts.iegutBeigas(sakuma);
+                elem.nakosais = new objekts.elements(vertiba);
+                elem.nakosais.ieprieksejais = elem;
+            }
         } else {
             objekts.struktura = new objekts.elements(vertiba);
         }
@@ -297,9 +304,10 @@ Strukturas[c++].izveidot = function(elementi) {
             var idx = objekts.struktura.length - 1;
             var elem = objekts.struktura[idx];
             var virsas_idx = Math.floor((idx - 1) / 2);
+            var tmp;
             while (virsas_idx >= 0) {
                 if (elem.vertiba > objekts.struktura[virsas_idx].vertiba) {
-                    var tmp = elem.vertiba;
+                    tmp = elem.vertiba;
                     elem.vertiba = objekts.struktura[virsas_idx].vertiba;
                     objekts.struktura[virsas_idx].vertiba = tmp;
                 } else {
@@ -364,6 +372,7 @@ Strukturas[c++].izveidot = function(elementi) {
                     apskatit.push([elem.labais, virsa, lvl]);
                 }
                 elem = elem.kreisais;
+                kreisais = true;
             } else {
                 var j = apskatit.pop();
                 elem = null;
@@ -377,17 +386,18 @@ Strukturas[c++].izveidot = function(elementi) {
         }
     };
     this.pievienot = function(vertiba, sakuma) {
+        var elem;
         if (objekts.struktura) {
             if (sakuma) {
               elem = objekts.struktura;
               objekts.struktura = new objekts.elements(vertiba);
-              if ((Math.floor(Math.random() * 2)) % 2 === 0) {
-                  objekts.struktura.kerisais = elem;
+              if (Math.floor(Math.random() * 2) % 2 === 0) {
+                  objekts.struktura.kreisais = elem;
               } else {
                   objekts.struktura.labais = elem;
               }
             } else {
-                var elem = objekts.struktura;
+                elem = objekts.struktura;
                 var j = true;
                 var k;
                 while (j) {
