@@ -64,27 +64,110 @@ Strukturas[c++].izveidot = function(elementi) {
             fn(elem);
         }
     };
-    this.iegutBeigas = function() {
-        var elem = objekts.struktura;
-        while (elem.nakosais) {
-            elem = elem.nakosais;
-        }
-        return elem;
-    };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
+        var jauns = new objekts.elements(vertiba);
+        var i;
         if (objekts.struktura) {
             var elem;
+            var obj;
+            var platums;
+            var augstums;
+            var skaits = 1;
+            if (attels) {
+                if (objekts.struktura.zimejums.length > 0) {
+                    platums = objekts.struktura.zimejums[0].width;
+                    augstums = objekts.struktura.zimejums[0].height;
+                }
+                for (i = 0; i < objekts.struktura.zimejums.length; i++) {
+                    obj =  window.fabric.util.object.clone(objekts.struktura.zimejums[i]);
+                    if (i === 1) {
+                        obj.setText(jauns.vertiba.toString());
+                    }
+                    if (i < 2) {
+                        obj.top -= augstums + augstums / 4;
+                        attels.add(obj);
+                    }
+                    jauns.zimejums.push(obj);
+                }
+            }
             if (sakuma) {
                 elem = objekts.struktura;
-                objekts.struktura = new objekts.elements(vertiba);
+                objekts.struktura = jauns;
                 objekts.struktura.nakosais = elem;
+                do {
+                    for (i = 0; i < elem.zimejums.length; i++) {
+                        elem.zimejums[i].animate('left', '+=' + (platums + 20).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    }
+                    elem = elem.nakosais;
+                } while (elem);
+                elem = objekts.struktura;
+                obj = elem;
+                setTimeout(function(){
+                    elem.zimejums[2].set({x2: elem.zimejums[2].x2 - 30});
+                    elem.zimejums[3].set({x1: elem.zimejums[3].x1 - 30, x2: elem.zimejums[3].x2 - 30});
+                    elem.zimejums[4].set({x1: elem.zimejums[4].x1 - 30, x2: elem.zimejums[4].x2 - 30});
+                    attels.add(elem.zimejums[2]);
+                    attels.add(elem.zimejums[3]);
+                    attels.add(elem.zimejums[4]);
+                }, 750);
             } else {
-                elem = objekts.iegutBeigas();
-                elem.nakosais = new objekts.elements(vertiba);
+                elem = objekts.struktura;
+                while (elem.nakosais) {
+                   elem = elem.nakosais;
+                   skaits++;
+                }
+                elem.nakosais = jauns;
+                if (attels) {
+                    elem.zimejums = elem.zimejums.concat(jauns.zimejums.slice(2, 5));
+                    jauns.zimejums = jauns.zimejums.slice(0, 2);
+                    for (i = 0; i < jauns.zimejums.length; i++) {
+                        jauns.zimejums[i].animate('left', '+=' + ((platums + 20) * skaits).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    }
+                    var rad = window.fabric.util.degreesToRadians(-40);
+                    var ls;
+                    var le;
+                    var centrs = new window.fabric.Point(elem.zimejums[2].x1, elem.zimejums[2].y1);
+                    var fn = function(x) {
+                        setTimeout(function(){
+                            var c = new window.fabric.Point(centrs.x + (skaits - 1) * (platums + 20), centrs.y);
+                            elem.zimejums[x].x1 += (skaits - 1) * (platums + 20);
+                            elem.zimejums[x].x2 += (skaits - 1) * (platums + 20);
+                            var rad = window.fabric.util.degreesToRadians(40);
+                            var ls = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[x].x1, elem.zimejums[x].y1), c, rad);
+                            var le = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[x].x2, elem.zimejums[x].y2), c, rad);
+                            var fn = { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad };
+                            elem.zimejums[x].animate('x1', ls.x, fn);
+                            elem.zimejums[x].animate('y1', ls.y, fn);
+                            elem.zimejums[x].animate('x2', le.x, fn);
+                            elem.zimejums[x].animate('y2', le.y, fn);
+                        }, 700);
+                    };
+                    for (i = 2; i <= 4; i++) {
+                        ls = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x1, elem.zimejums[i].y1), centrs, rad);
+                        le = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x2, elem.zimejums[i].y2), centrs, rad);
+                        elem.zimejums[i].set({x1: ls.x, y1: ls.y, x2: le.x, y2: le.y});
+                        attels.add(elem.zimejums[i]);
+                        fn(i);
+                    }
+                }
+                obj = jauns;
+            }
+            if (attels) {
+                setTimeout(function(){
+                    for (i = 0; i < 2; i++) {
+                        obj.zimejums[i].animate('top', '+=' + (augstums + augstums / 4).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                }}, sakuma ? 0 : 500);
+                setTimeout(function(){
+                    var apjoms = sakuma ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
+                    elem.zimejums[2].animate(sakuma ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    for (i = 3; i <= 4; i++) {
+                        elem.zimejums[i].animate('left', apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                }}, sakuma ? 850 : 0);
             }
         } else {
-            objekts.struktura = new objekts.elements(vertiba);
+            objekts.struktura = jauns;
         }
+        return 1300;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -149,7 +232,7 @@ Strukturas[c++].izveidot = function(elementi) {
         }
         return elem;
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
         if (objekts.struktura) {
             var elem;
             if (sakuma) {
@@ -165,6 +248,7 @@ Strukturas[c++].izveidot = function(elementi) {
         } else {
             objekts.struktura = new objekts.elements(vertiba);
         }
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -230,12 +314,13 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
         if (sakuma) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
             objekts.struktura.push(new objekts.elements(vertiba));
         }
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -264,12 +349,13 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
         if (sakuma) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
             objekts.struktura.push(new objekts.elements(vertiba));
         }
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -296,7 +382,7 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
         if (sakuma) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
@@ -317,6 +403,7 @@ Strukturas[c++].izveidot = function(elementi) {
                 virsas_idx = Math.floor((virsas_idx - 1) / 2);
             }
         }
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -385,7 +472,7 @@ Strukturas[c++].izveidot = function(elementi) {
             }
         }
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
         var elem;
         if (objekts.struktura) {
             if (sakuma) {
@@ -429,6 +516,7 @@ Strukturas[c++].izveidot = function(elementi) {
         } else {
             objekts.struktura = new objekts.elements(vertiba);
         }
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -491,7 +579,8 @@ Strukturas[c++].izveidot = function(elementi) {
         this.kreisais = null;
         this.labais = null;
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
+        return 0;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), false);
@@ -510,7 +599,8 @@ Strukturas[c++].izveidot = function(elementi) {
         this.kreisais = null;
         this.labais = null;
     };
-    this.pievienot = function(vertiba, sakuma) {
+    this.pievienot = function(vertiba, sakuma, attels) {
+        return 0;
     };
     this.zimet = function(attels, ramis, teksts, linija) {
     };

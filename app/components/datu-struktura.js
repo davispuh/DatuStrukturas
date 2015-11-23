@@ -29,8 +29,9 @@ export default Ember.Component.extend({
                 strokeWidth: 3,
                 stroke: 'black',
                 selectable: false}),
+    animacija: Date.now(),
     platums: 1000,
-    garums: 800,
+    augstums: 1200,
     elementi: 6,
     pievienotVertiba: Math.round(Math.random() * 99),
     struktura: null,
@@ -44,8 +45,8 @@ export default Ember.Component.extend({
     meklesana: 'Vērtība',
     actions: {
         izveidot() {
-            if (this.elementi < 1) {
-                this.set('elementi', 1);
+            if (this.elementi < 2) {
+                this.set('elementi', 2);
             }
             if (this.elementi > 10) {
                 this.set('elementi', 10);
@@ -55,10 +56,16 @@ export default Ember.Component.extend({
             this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
         },
         pievienot() {
-            this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pievienotPozicija === 'Sākumā');
-            this.set('pievienotVertiba', Math.round(Math.random() * 99));
-            this.attels.clear();
-            this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
+            var objeckts = this;
+            if (Math.floor(new Date() - this.animacija) > 0) {
+                var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pievienotPozicija === 'Sākumā', this.attels);
+                this.set('animacija', Date.now() + gaidit);
+                this.set('pievienotVertiba', Math.round(Math.random() * 99));
+                setTimeout(function(){
+                    objeckts.attels.clear();
+                    objeckts.struktura.zimet(objeckts.attels, objeckts.elements, objeckts.teksts, objeckts.linija);
+                }, gaidit);
+            }
         },
         kartot() {
         },
