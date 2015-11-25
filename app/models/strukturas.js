@@ -48,11 +48,21 @@ function dabutVertibu() {
     return Math.round(Math.random() * 99);
 }
 
+function dabutAtslegas() {
+    return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').reverse();
+}
+
+var ramjaKrasa  = '#008CBA';
+var aktivaKrasa = '#EC5840';
+
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
+    this.aktivsElements = null;
+    this.atslegas = dabutAtslegas();
     var objekts = this;
     this.elements = function(vertiba) {
         this.vertiba = vertiba;
+        this.atslega = objekts.atslegas.pop();
         this.zimejums = [];
         this.nakosais = null;
     };
@@ -63,6 +73,13 @@ Strukturas[c++].izveidot = function(elementi) {
             elem = elem.nakosais;
             fn(elem);
         }
+    };
+    this.elementuSkaits = function() {
+        var i = 0;
+        objekts.katramElementam(function(elem) {
+            i++;
+        });
+        return i;
     };
     this.pievienot = function(vertiba, pozicija, attels) {
         var jauns = new objekts.elements(vertiba);
@@ -79,8 +96,10 @@ Strukturas[c++].izveidot = function(elementi) {
                     augstums = objekts.struktura.zimejums[0].height;
                 }
                 for (i = 0; i < objekts.struktura.zimejums.length; i++) {
-                    obj =  window.fabric.util.object.clone(objekts.struktura.zimejums[i]);
-                    if (i === 1) {
+                    obj = window.fabric.util.object.clone(objekts.struktura.zimejums[i]);
+                    if (i === 0) {
+                        obj.setStroke(ramjaKrasa);
+                    } else if (i === 1) {
                         obj.setText(jauns.vertiba.toString());
                     }
                     if (i < 2) {
@@ -167,6 +186,7 @@ Strukturas[c++].izveidot = function(elementi) {
         } else {
             objekts.struktura = jauns;
         }
+        objekts.aktivsElements = jauns;
         return 1300;
     };
     for (var i = 0; i < elementi; i++) {
@@ -178,6 +198,11 @@ Strukturas[c++].izveidot = function(elementi) {
         teksts.top = ramis.top + ramis.height / 4;
         objekts.katramElementam(function(elem) {
             i++;
+            if (elem === objekts.aktivsElements) {
+               ramis.setStroke(aktivaKrasa);
+            } else {
+               ramis.setStroke(ramjaKrasa);
+            }
             ramis.left = 50 + (ramis.width + 20) * i;
             teksts.setText(elem.vertiba.toString());
             teksts.left = ramis.left + (ramis.width / 4);
@@ -227,7 +252,7 @@ Strukturas[c++].izveidot = function(elementi) {
             fn(elem);
         }
     };
-    this.iegutBeigas = function(sakuma) {
+    this.iegutBeigas = function() {
         var elem = objekts.struktura;
         while (elem.nakosais) {
             elem = elem.nakosais;
@@ -243,7 +268,7 @@ Strukturas[c++].izveidot = function(elementi) {
                 objekts.struktura.nakosais = elem;
                 elem.ieprieksejais = objekts.struktura;
             } else {
-                elem = objekts.iegutBeigas(pozicija === 1);
+                elem = objekts.iegutBeigas();
                 elem.nakosais = new objekts.elements(vertiba);
                 elem.nakosais.ieprieksejais = elem;
             }

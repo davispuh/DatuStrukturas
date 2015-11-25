@@ -30,13 +30,14 @@ export default Ember.Component.extend({
     augstums: 1200,
     elementi: 6,
     pievienotVertiba: Math.round(Math.random() * 99),
+    pievienotIzslegts: false,
     struktura: null,
     pozicijas: ['Beigās', 'Sākumā', 'Pēc Aktīvā', 'Pirms Aktīvā'],
     pievienotPozicija: 'Beigās',
     algoritmi: ['Izvēles šķirošana', 'Iestarpinājuma šķirošanas', 'Burbuļa metode'],
     kartosana: 'Izvēles šķirošana',
-    veidi: ['Atslēga', 'Vērtība'],
-    dzestVeids: 'Indekss',
+    veidi: ['Atslēga'],
+    dzestVeids: 'Atslēga',
     meklesanasVeids: ['Vērtība', 'Minimālā', 'Maksimālā'],
     meklesana: 'Vērtība',
     actions: {
@@ -47,16 +48,23 @@ export default Ember.Component.extend({
             if (this.elementi > 10) {
                 this.set('elementi', 10);
             }
+            this.set('pievienotIzslegts', false);
             this.struktura = this.get('struktura').izveidot(this.elementi);
             this.attels.clear();
             this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
         },
         pievienot() {
+            if (this.pievienotIzslegts || (this.struktura.elementuSkaits && this.struktura.elementuSkaits() >= 14)) {
+                this.set('pievienotIzslegts', true);
+                return;
+            }
             var objeckts = this;
             if (Math.floor(new Date() - this.animacija) > 0) {
-                var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pozicijas[this.pievienotPozicija], this.attels);
+                var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pozicijas.indexOf(this.pievienotPozicija), this.attels);
                 this.set('animacija', Date.now() + gaidit);
                 this.set('pievienotVertiba', Math.round(Math.random() * 99));
+                if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() >= 14)
+                    this.set('pievienotIzslegts', true);
                 setTimeout(function(){
                     objeckts.attels.clear();
                     objeckts.struktura.zimet(objeckts.attels, objeckts.elements, objeckts.teksts, objeckts.linija);
