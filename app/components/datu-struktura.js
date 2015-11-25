@@ -30,7 +30,7 @@ export default Ember.Component.extend({
                 stroke: 'black',
                 selectable: false}),
     animacija: Date.now(),
-    platums: 1000,
+    platums: 1400,
     augstums: 1200,
     elementi: 6,
     pievienotVertiba: Math.round(Math.random() * 99),

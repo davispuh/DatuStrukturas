@@ -1,10 +1,12 @@
-<ul class="small-block-grid-3">
-    {{#each model as |struktura|}}
-        <li>
-            {{#link-to "struktura" struktura.id}}<img src="http://placehold.it/500x500&amp;text={{struktura.nosaukums}}" />{{/link-to}}
-            <h2>{{link-to struktura.nosaukums "struktura" struktura.id}}</h2>
-        </li>
-    {{/each}}
-</ul>
+<div class="row">
+    <ul class="small-block-grid-3">
+        {{#each model as |struktura|}}
+            <li>
+                {{#link-to "struktura" struktura.id}}<img src="http://placehold.it/500x500&amp;text={{struktura.nosaukums}}" />{{/link-to}}
+                <h2>{{link-to struktura.nosaukums "struktura" struktura.id}}</h2>
+            </li>
+        {{/each}}
+    </ul>
+</div>
 
 {{outlet}}
