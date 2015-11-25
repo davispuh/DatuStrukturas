@@ -11,17 +11,13 @@ export default Ember.Component.extend({
     },
     attels: null,
     elements: new window.fabric.Rect({
-                left: 50,
-                top: 300,
                 width: 70,
                 height: 70,
                 fill: 'white',
                 strokeWidth: 4,
-                stroke: 'blue',
+                stroke: '#008CBA',
                 selectable: false}),
     teksts: new window.fabric.Text('', {
-                left: 60,
-                top: 300 + 70 / 4,
                 fill: 'black',
                 textAlign: 'center',
                 selectable: false}),
