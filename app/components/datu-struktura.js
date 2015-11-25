@@ -31,11 +31,11 @@ export default Ember.Component.extend({
     elementi: 6,
     pievienotVertiba: Math.round(Math.random() * 99),
     struktura: null,
-    pozicijas: ['Beigās', 'Sākumā'],
+    pozicijas: ['Beigās', 'Sākumā', 'Pēc Aktīvā', 'Pirms Aktīvā'],
     pievienotPozicija: 'Beigās',
     algoritmi: ['Izvēles šķirošana', 'Iestarpinājuma šķirošanas', 'Burbuļa metode'],
     kartosana: 'Izvēles šķirošana',
-    veidi: ['Indekss', 'Vērtība'],
+    veidi: ['Atslēga', 'Vērtība'],
     dzestVeids: 'Indekss',
     meklesanasVeids: ['Vērtība', 'Minimālā', 'Maksimālā'],
     meklesana: 'Vērtība',
@@ -54,7 +54,7 @@ export default Ember.Component.extend({
         pievienot() {
             var objeckts = this;
             if (Math.floor(new Date() - this.animacija) > 0) {
-                var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pievienotPozicija === 'Sākumā', this.attels);
+                var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pozicijas[this.pievienotPozicija], this.attels);
                 this.set('animacija', Date.now() + gaidit);
                 this.set('pievienotVertiba', Math.round(Math.random() * 99));
                 setTimeout(function(){

@@ -64,7 +64,7 @@ Strukturas[c++].izveidot = function(elementi) {
             fn(elem);
         }
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
+    this.pievienot = function(vertiba, pozicija, attels) {
         var jauns = new objekts.elements(vertiba);
         var i;
         if (objekts.struktura) {
@@ -90,7 +90,7 @@ Strukturas[c++].izveidot = function(elementi) {
                     jauns.zimejums.push(obj);
                 }
             }
-            if (sakuma) {
+            if (pozicija === 1) {
                 elem = objekts.struktura;
                 objekts.struktura = jauns;
                 objekts.struktura.nakosais = elem;
@@ -156,13 +156,13 @@ Strukturas[c++].izveidot = function(elementi) {
                 setTimeout(function(){
                     for (i = 0; i < 2; i++) {
                         obj.zimejums[i].animate('top', '+=' + (augstums + augstums / 4).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
-                }}, sakuma ? 0 : 500);
+                }}, pozicija === 1 ? 0 : 500);
                 setTimeout(function(){
-                    var apjoms = sakuma ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
-                    elem.zimejums[2].animate(sakuma ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    var apjoms = pozicija === 1 ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
+                    elem.zimejums[2].animate(pozicija === 1 ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                     for (i = 3; i <= 4; i++) {
                         elem.zimejums[i].animate('left', apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
-                }}, sakuma ? 850 : 0);
+                }}, pozicija === 1 ? 850 : 0);
             }
         } else {
             objekts.struktura = jauns;
@@ -170,7 +170,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 1300;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         var i = 0;
@@ -234,16 +234,16 @@ Strukturas[c++].izveidot = function(elementi) {
         }
         return elem;
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
+    this.pievienot = function(vertiba, pozicija, attels) {
         if (objekts.struktura) {
             var elem;
-            if (sakuma) {
+            if (pozicija === 1) {
                 elem = objekts.struktura;
                 objekts.struktura = new objekts.elements(vertiba);
                 objekts.struktura.nakosais = elem;
                 elem.ieprieksejais = objekts.struktura;
             } else {
-                elem = objekts.iegutBeigas(sakuma);
+                elem = objekts.iegutBeigas(pozicija === 1);
                 elem.nakosais = new objekts.elements(vertiba);
                 elem.nakosais.ieprieksejais = elem;
             }
@@ -253,7 +253,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         var i = 0;
@@ -318,8 +318,8 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
-        if (sakuma) {
+    this.pievienot = function(vertiba, pozicija, attels) {
+        if (pozicija === 1) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
             objekts.struktura.push(new objekts.elements(vertiba));
@@ -327,7 +327,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         ramis.left = attels.width / 2;
@@ -353,8 +353,8 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
-        if (sakuma) {
+    this.pievienot = function(vertiba, pozicija, attels) {
+        if (pozicija === 1) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
             objekts.struktura.push(new objekts.elements(vertiba));
@@ -362,7 +362,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         ramis.top = 70 + ramis.height;
@@ -388,8 +388,8 @@ Strukturas[c++].izveidot = function(elementi) {
         this.vertiba = vertiba;
         this.zimejums = [];
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
-        if (sakuma) {
+    this.pievienot = function(vertiba, pozicija, attels) {
+        if (pozicija === 1) {
             objekts.struktura.unshift(new objekts.elements(vertiba));
         } else {
             objekts.struktura.push(new objekts.elements(vertiba));
@@ -412,7 +412,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         for (var i = 0; i < objekts.struktura.length; i++) {
@@ -478,10 +478,10 @@ Strukturas[c++].izveidot = function(elementi) {
             }
         }
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
+    this.pievienot = function(vertiba, pozicija, attels) {
         var elem;
         if (objekts.struktura) {
-            if (sakuma) {
+            if (pozicija === 1) {
               elem = objekts.struktura;
               objekts.struktura = new objekts.elements(vertiba);
               if (Math.floor(Math.random() * 2) % 2 === 0) {
@@ -525,7 +525,7 @@ Strukturas[c++].izveidot = function(elementi) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
         objekts.katramElementam(function(elem, virsa, lvl, kreisais) {
@@ -585,11 +585,11 @@ Strukturas[c++].izveidot = function(elementi) {
         this.kreisais = null;
         this.labais = null;
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
+    this.pievienot = function(vertiba, pozicija, attels) {
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
-        objekts.pievienot(dabutVertibu(), false);
+        objekts.pievienot(dabutVertibu(), 0);
     }
     this.zimet = function(attels, ramis, teksts, linija) {
     };
@@ -605,7 +605,7 @@ Strukturas[c++].izveidot = function(elementi) {
         this.kreisais = null;
         this.labais = null;
     };
-    this.pievienot = function(vertiba, sakuma, attels) {
+    this.pievienot = function(vertiba, pozicija, attels) {
         return 0;
     };
     this.zimet = function(attels, ramis, teksts, linija) {
