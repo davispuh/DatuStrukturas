@@ -198,6 +198,30 @@ Strukturas[c++].izveidot = function(elementi) {
         objekts.aktivsElements = jauns;
         return gaidit;
     };
+    this.dzest = function(atslega, attels) {
+        var ieprieks = null;
+        var elem = objekts.struktura;
+        while (elem) {
+            if (elem.atslega === atslega) {
+                objekts.atslegas.push(elem.atslega);
+                if (objekts.aktivsElements === elem) {
+                    objekts.aktivsElements = elem.nakosais;
+                }
+                if (ieprieks) {
+                    ieprieks.nakosais = elem.nakosais;
+                } else {
+                    objekts.struktura = elem.nakosais;
+                }
+                if (!objekts.aktivsElements) {
+                    objekts.aktivsElements = ieprieks;
+                }
+                return 0;
+            }
+            ieprieks = elem;
+            elem = elem.nakosais;
+        }
+        return 0;
+    }
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), 0);
     }

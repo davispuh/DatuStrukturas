@@ -26,7 +26,7 @@
             <div class="small-6 columns"><a {{action "kartot"}} class="button postfix">Kārtot</a></div>
         </li>
         <li class="row collapse">
-            <div class="small-3 columns">{{input value=dzestVertiba}}</div>
+            <div class="small-3 columns">{{input value=dzestAtslega}}</div>
             <div class="small-3 columns">
                 <select onchange={{action (mut dzestVeids) value="target.value"}}>
                     {{#each veidi as |veids|}}
@@ -34,10 +34,10 @@
                     {{/each}}
                 </select>
             </div>
-            <div class="small-6 columns"><a {{action "dzest"}} class="button postfix">Dzēst elementu</a></div>
+            <div class="small-6 columns"><a {{action "dzest"}} disabled={{if dzestIzslegts 'disabled'}} class="button postfix">Dzēst elementu</a></div>
         </li>
         <li class="row collapse">
-            <div class="small-3 columns">{{input value=dzestVertiba}}</div>
+            <div class="small-3 columns">{{input value=mekletVertiba}}</div>
             <div class="small-3 columns">
                 <select onchange={{action (mut meklesana) value="target.value"}}>
                     {{#each meklesanasVeids as |veids|}}

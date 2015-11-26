@@ -38,6 +38,8 @@ export default Ember.Component.extend({
     kartosana: 'Izvēles šķirošana',
     veidi: ['Atslēga'],
     dzestVeids: 'Atslēga',
+    dzestAtslega: 'A',
+    dzestIzslegts: true,
     meklesanasVeids: ['Vērtība', 'Minimālā', 'Maksimālā'],
     meklesana: 'Vērtība',
     actions: {
@@ -58,22 +60,38 @@ export default Ember.Component.extend({
                 this.set('pievienotIzslegts', true);
                 return;
             }
-            var objeckts = this;
+            var objekts = this;
             if (Math.floor(new Date() - this.animacija) > 0) {
                 var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pozicijas.indexOf(this.pievienotPozicija), this.attels);
                 this.set('animacija', Date.now() + gaidit);
+                this.set('dzestIzslegts', false);
                 this.set('pievienotVertiba', Math.round(Math.random() * 99));
-                if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() >= 14)
+                if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() >= 14) {
                     this.set('pievienotIzslegts', true);
+                }
                 setTimeout(function(){
-                    objeckts.attels.clear();
-                    objeckts.struktura.zimet(objeckts.attels, objeckts.elements, objeckts.teksts, objeckts.linija);
+                    objekts.attels.clear();
+                    objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
                 }, gaidit);
             }
         },
         kartot() {
         },
         dzest() {
+            if (this.dzestIzslegts || this.dzestAtslega.length <= 0 || (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0)) {
+                this.set('dzestIzslegts', true);
+                return;
+            }
+            var objekts = this;
+            var gaidit = this.struktura.dzest(this.dzestAtslega.charAt(0).toUpperCase(), this.attels);
+            if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() < 14) {
+                this.set('pievienotIzslegts', false);
+            }
+            if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0) {
+                this.set('dzestIzslegts', true);
+            }
+            objekts.attels.clear();
+            objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
         },
         meklet() {
         }
