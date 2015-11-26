@@ -101,8 +101,10 @@ Strukturas[c++].izveidot = function(elementi) {
                         obj.setStroke(ramjaKrasa);
                     } else if (i === 1) {
                         obj.setText(jauns.vertiba.toString());
+                    } else if (i === 2) {
+                        obj.setText(jauns.atslega.toString());
                     }
-                    if (i < 2) {
+                    if (i < 3) {
                         obj.top -= augstums + augstums / 4;
                         attels.add(obj);
                     }
@@ -122,12 +124,12 @@ Strukturas[c++].izveidot = function(elementi) {
                 elem = objekts.struktura;
                 obj = elem;
                 setTimeout(function(){
-                    elem.zimejums[2].set({x2: elem.zimejums[2].x2 - 30});
-                    elem.zimejums[3].set({x1: elem.zimejums[3].x1 - 30, x2: elem.zimejums[3].x2 - 30});
+                    elem.zimejums[3].set({x2: elem.zimejums[3].x2 - 30});
                     elem.zimejums[4].set({x1: elem.zimejums[4].x1 - 30, x2: elem.zimejums[4].x2 - 30});
-                    attels.add(elem.zimejums[2]);
+                    elem.zimejums[5].set({x1: elem.zimejums[5].x1 - 30, x2: elem.zimejums[5].x2 - 30});
                     attels.add(elem.zimejums[3]);
                     attels.add(elem.zimejums[4]);
+                    attels.add(elem.zimejums[5]);
                 }, 750);
             } else {
                 elem = objekts.struktura;
@@ -137,15 +139,15 @@ Strukturas[c++].izveidot = function(elementi) {
                 }
                 elem.nakosais = jauns;
                 if (attels) {
-                    elem.zimejums = elem.zimejums.concat(jauns.zimejums.slice(2, 5));
-                    jauns.zimejums = jauns.zimejums.slice(0, 2);
+                    elem.zimejums = elem.zimejums.concat(jauns.zimejums.slice(3, 6));
+                    jauns.zimejums = jauns.zimejums.slice(0, 3);
                     for (i = 0; i < jauns.zimejums.length; i++) {
                         jauns.zimejums[i].animate('left', '+=' + ((platums + 20) * skaits).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                     }
                     var rad = window.fabric.util.degreesToRadians(-40);
                     var ls;
                     var le;
-                    var centrs = new window.fabric.Point(elem.zimejums[2].x1, elem.zimejums[2].y1);
+                    var centrs = new window.fabric.Point(elem.zimejums[3].x1, elem.zimejums[3].y1);
                     var fn = function(x) {
                         setTimeout(function(){
                             var c = new window.fabric.Point(centrs.x + (skaits - 1) * (platums + 20), centrs.y);
@@ -161,7 +163,7 @@ Strukturas[c++].izveidot = function(elementi) {
                             elem.zimejums[x].animate('y2', le.y, fn);
                         }, 700);
                     };
-                    for (i = 2; i <= 4; i++) {
+                    for (i = 3; i <= 5; i++) {
                         ls = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x1, elem.zimejums[i].y1), centrs, rad);
                         le = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x2, elem.zimejums[i].y2), centrs, rad);
                         elem.zimejums[i].set({x1: ls.x, y1: ls.y, x2: le.x, y2: le.y});
@@ -173,13 +175,13 @@ Strukturas[c++].izveidot = function(elementi) {
             }
             if (attels) {
                 setTimeout(function(){
-                    for (i = 0; i < 2; i++) {
+                    for (i = 0; i < 3; i++) {
                         obj.zimejums[i].animate('top', '+=' + (augstums + augstums / 4).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                 }}, pozicija === 1 ? 0 : 500);
                 setTimeout(function(){
                     var apjoms = pozicija === 1 ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
-                    elem.zimejums[2].animate(pozicija === 1 ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
-                    for (i = 3; i <= 4; i++) {
+                    elem.zimejums[3].animate(pozicija === 1 ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    for (i = 4; i <= 5; i++) {
                         elem.zimejums[i].animate('left', apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                 }}, pozicija === 1 ? 850 : 0);
             }
@@ -195,7 +197,6 @@ Strukturas[c++].izveidot = function(elementi) {
     this.zimet = function(attels, ramis, teksts, linija) {
         var i = 0;
         ramis.top = 70 + ramis.height;
-        teksts.top = ramis.top + ramis.height / 4;
         objekts.katramElementam(function(elem) {
             i++;
             if (elem === objekts.aktivsElements) {
@@ -204,11 +205,20 @@ Strukturas[c++].izveidot = function(elementi) {
                ramis.setStroke(ramjaKrasa);
             }
             ramis.left = 50 + (ramis.width + 20) * i;
-            teksts.setText(elem.vertiba.toString());
-            teksts.left = ramis.left + (ramis.width / 4);
             attels.add(ramis);
+            teksts.top = ramis.top + ramis.height / 4;
+            teksts.left = ramis.left + (ramis.width / 4);
+            teksts.setFontSize(40);
+            teksts.setText(elem.vertiba.toString());
             attels.add(teksts);
             elem.zimejums = [ramis, teksts];
+            teksts = window.fabric.util.object.clone(teksts);
+            teksts.top = ramis.top + (ramis.height / 2) + 14;
+            teksts.left = ramis.left + (ramis.width / 8);
+            teksts.setFontSize(20);
+            teksts.setText(elem.atslega.toString());
+            attels.add(teksts);
+            elem.zimejums = elem.zimejums.concat(teksts);
             ramis = window.fabric.util.object.clone(ramis);
             teksts = window.fabric.util.object.clone(teksts);
         });
