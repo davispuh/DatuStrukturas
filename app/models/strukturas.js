@@ -68,6 +68,9 @@ Strukturas[c++].izveidot = function(elementi) {
     };
     this.katramElementam = function(fn) {
         var elem = objekts.struktura;
+        if (!elem) {
+            return;
+        }
         fn(elem);
         while (elem.nakosais) {
             elem = elem.nakosais;
@@ -84,6 +87,7 @@ Strukturas[c++].izveidot = function(elementi) {
     this.pievienot = function(vertiba, pozicija, attels) {
         var jauns = new objekts.elements(vertiba);
         var i;
+        var gaidit = 1300;
         if (objekts.struktura) {
             var elem;
             var obj;
@@ -139,14 +143,14 @@ Strukturas[c++].izveidot = function(elementi) {
                 }
                 elem.nakosais = jauns;
                 if (attels) {
-                    elem.zimejums = elem.zimejums.concat(jauns.zimejums.slice(3, 6));
-                    jauns.zimejums = jauns.zimejums.slice(0, 3);
-                    for (i = 0; i < jauns.zimejums.length; i++) {
+                    for (i = 0; i < 3; i++) {
                         jauns.zimejums[i].animate('left', '+=' + ((platums + 20) * skaits).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                     }
                     var rad = window.fabric.util.degreesToRadians(-40);
                     var ls;
                     var le;
+                    elem.zimejums[3].x1 = jauns.zimejums[3].x1;
+                    elem.zimejums[3].x2 = jauns.zimejums[3].x2;
                     var centrs = new window.fabric.Point(elem.zimejums[3].x1, elem.zimejums[3].y1);
                     var fn = function(x) {
                         setTimeout(function(){
@@ -164,6 +168,8 @@ Strukturas[c++].izveidot = function(elementi) {
                         }, 700);
                     };
                     for (i = 3; i <= 5; i++) {
+                        elem.zimejums[i].x1 = jauns.zimejums[i].x1;
+                        elem.zimejums[i].x2 = jauns.zimejums[i].x2;
                         ls = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x1, elem.zimejums[i].y1), centrs, rad);
                         le = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x2, elem.zimejums[i].y2), centrs, rad);
                         elem.zimejums[i].set({x1: ls.x, y1: ls.y, x2: le.x, y2: le.y});
@@ -187,9 +193,10 @@ Strukturas[c++].izveidot = function(elementi) {
             }
         } else {
             objekts.struktura = jauns;
+            gaidit = 0;
         }
         objekts.aktivsElements = jauns;
-        return 1300;
+        return gaidit;
     };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), 0);
@@ -197,50 +204,60 @@ Strukturas[c++].izveidot = function(elementi) {
     this.zimet = function(attels, ramis, teksts, linija) {
         var i = 0;
         ramis.top = 70 + ramis.height;
-        objekts.katramElementam(function(elem) {
-            i++;
-            if (elem === objekts.aktivsElements) {
-               ramis.setStroke(aktivaKrasa);
-            } else {
-               ramis.setStroke(ramjaKrasa);
-            }
-            ramis.left = 50 + (ramis.width + 20) * i;
-            attels.add(ramis);
-            teksts.top = ramis.top + ramis.height / 4;
-            teksts.left = ramis.left + (ramis.width / 4);
-            teksts.setFontSize(40);
-            teksts.setText(elem.vertiba.toString());
-            attels.add(teksts);
-            elem.zimejums = [ramis, teksts];
-            teksts = window.fabric.util.object.clone(teksts);
-            teksts.top = ramis.top + (ramis.height / 2) + 14;
-            teksts.left = ramis.left + (ramis.width / 8);
-            teksts.setFontSize(20);
-            teksts.setText(elem.atslega.toString());
-            attels.add(teksts);
-            elem.zimejums = elem.zimejums.concat(teksts);
-            ramis = window.fabric.util.object.clone(ramis);
-            teksts = window.fabric.util.object.clone(teksts);
-        });
-        objekts.katramElementam(function(elem) {
-            if (elem.nakosais) {
+        if (this.struktura) {
+            objekts.katramElementam(function(elem) {
+                i++;
+                if (elem === objekts.aktivsElements) {
+                   ramis.setStroke(aktivaKrasa);
+                } else {
+                   ramis.setStroke(ramjaKrasa);
+                }
+                ramis.left = 50 + (ramis.width + 20) * i;
+                attels.add(ramis);
+                teksts.top = ramis.top + ramis.height / 4;
+                teksts.left = ramis.left + (ramis.width / 4);
+                teksts.setFontSize(40);
+                teksts.setText(elem.vertiba.toString());
+                attels.add(teksts);
+                elem.zimejums = [ramis, teksts];
+                teksts = window.fabric.util.object.clone(teksts);
+                teksts.top = ramis.top + (ramis.height / 2) + 14;
+                teksts.left = ramis.left + (ramis.width / 8);
+                teksts.setFontSize(20);
+                teksts.setText(elem.atslega.toString());
+                attels.add(teksts);
+                elem.zimejums = elem.zimejums.concat(teksts);
+                ramis = window.fabric.util.object.clone(ramis);
+                teksts = window.fabric.util.object.clone(teksts);
+            });
+            objekts.katramElementam(function(elem) {
                 linija.set({x1: elem.zimejums[0].left + elem.zimejums[0].width / 4 * 3,
                             x2: elem.zimejums[0].left + elem.zimejums[0].width + 40,
                             y1: elem.zimejums[0].top + elem.zimejums[0].height / 5,
                             y2: elem.zimejums[0].top + elem.zimejums[0].height / 5});
-                attels.add(linija);
+                if (elem.nakosais) {
+                    attels.add(linija);
+                }
                 elem.zimejums.push(linija);
                 linija = window.fabric.util.object.clone(linija);
                 linija.set({'x1': linija.x2 - 15, 'y1': linija.y1 - 5});
-                attels.add(linija);
+                if (elem.nakosais) {
+                    attels.add(linija);
+                }
                 elem.zimejums.push(linija);
                 linija = window.fabric.util.object.clone(linija);
                 linija.set({'y1': linija.y1 + 10});
-                attels.add(linija);
+                if (elem.nakosais) {
+                    attels.add(linija);
+                }
                 elem.zimejums.push(linija);
                 linija = window.fabric.util.object.clone(linija);
-            }
-        });
+            });
+        } else {
+            ramis.left = 70 + ramis.width;
+            ramis.setStroke(ramjaKrasa);
+            attels.add(ramis);
+        }
     };
     return this;
 };

@@ -28,7 +28,7 @@ export default Ember.Component.extend({
     animacija: Date.now(),
     platums: 1400,
     augstums: 1200,
-    elementi: 6,
+    elementi: 0,
     pievienotVertiba: Math.round(Math.random() * 99),
     pievienotIzslegts: false,
     struktura: null,
@@ -42,8 +42,8 @@ export default Ember.Component.extend({
     meklesana: 'Vērtība',
     actions: {
         izveidot() {
-            if (this.elementi < 2) {
-                this.set('elementi', 2);
+            if (this.elementi < 0) {
+                this.set('elementi', 0);
             }
             if (this.elementi > 10) {
                 this.set('elementi', 10);
