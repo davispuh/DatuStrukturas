@@ -54,7 +54,9 @@ function dabutAtslegas() {
 
 var ramjaKrasa  = '#008CBA';
 var aktivaKrasa = '#EC5840';
+var iezimetaKrasa = '#FFAE00';
 
+// Vienkāršsaistīts saraksts
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
     this.aktivsElements = null;
@@ -222,6 +224,63 @@ Strukturas[c++].izveidot = function(elementi) {
         }
         return 0;
     }
+    this.meklet = function(meklesana, vertiba, attels) {
+        var ieprieks = null;
+        var elem = objekts.struktura;
+        var i = 0;
+        var vertElem = null;
+        var prevVertElem = null;
+        var fn = function(t, e, iep, v, pv) {
+            setTimeout(function(){
+                if (e === v) {
+                    if (pv) {
+                        pv.zimejums[0].setStroke(ramjaKrasa);
+                    };
+                    e.zimejums[0].setStroke(aktivaKrasa);
+                } else {
+                    e.zimejums[0].setStroke(iezimetaKrasa);
+                }
+                if (iep && iep !== v) {
+                    iep.zimejums[0].setStroke(ramjaKrasa);
+                };
+                attels.renderAll();
+            }, t);
+        };
+        if (objekts.aktivsElements) {
+            objekts.aktivsElements.zimejums[0].setStroke(ramjaKrasa);
+            attels.renderAll();
+        }
+        while (elem) {
+            i++;
+            prevVertElem = vertElem;
+            if (meklesana === 1) {
+                if (!vertElem || elem.vertiba < vertElem.vertiba) {
+                    vertElem = elem;
+                }
+            } else if (meklesana === 2) {
+                 if (!vertElem || elem.vertiba > vertElem.vertiba) {
+                    vertElem = elem;
+                }
+            } else if (elem.vertiba === vertiba) {
+                objekts.aktivsElements = elem;
+                if (attels) {
+                    fn(i * 300, elem, ieprieks);
+                }
+                return i * 300;
+            }
+            if (attels) {
+                fn(i * 300, elem, ieprieks, vertElem, prevVertElem);
+            }
+            ieprieks = elem;
+            elem = elem.nakosais;
+        }
+        if (meklesana === 1 || meklesana === 2) {
+            objekts.aktivsElements = vertElem;
+        } else {
+            objekts.aktivsElements = null;
+        }
+        return i * 300 + 100;
+    }
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), 0);
     }
@@ -286,6 +345,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Divkāršsaistīts saraksts
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
     this.aktivsElements = null;
@@ -395,6 +455,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Steks
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = [];
     var objekts = this;
@@ -435,6 +496,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Rinda
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = [];
     var objekts = this;
@@ -475,6 +537,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Kaudze
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = [];
     var objekts = this;
@@ -540,6 +603,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Binārs koks
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
     var objekts = this;
@@ -675,6 +739,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// AVL koks
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
     var objekts = this;
@@ -695,6 +760,7 @@ Strukturas[c++].izveidot = function(elementi) {
     return this;
 };
 
+// Meklēšanas koks
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
     var objekts = this;

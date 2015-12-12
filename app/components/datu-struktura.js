@@ -42,9 +42,11 @@ export default Ember.Component.extend({
     dzestIzslegts: true,
     meklesanasVeids: ['Vērtība', 'Minimālā', 'Maksimālā'],
     meklesana: 'Vērtība',
+    mekletVertiba: '',
+    mekletIzslegts: true,
     actions: {
         izveidot() {
-            if (this.elementi < 0) {
+            if (isNaN(this.elementi) || this.elementi < 0) {
                 this.set('elementi', 0);
             }
             if (this.elementi > 10) {
@@ -52,6 +54,13 @@ export default Ember.Component.extend({
             }
             this.set('pievienotIzslegts', false);
             this.struktura = this.get('struktura').izveidot(this.elementi);
+            if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() > 0) {
+                this.set('dzestIzslegts', false);
+                this.set('mekletIzslegts', false);
+            } else {
+                this.set('dzestIzslegts', true);
+                this.set('mekletIzslegts', true);
+            }
             this.attels.clear();
             this.struktura.zimet(this.attels, this.elements, this.teksts, this.linija);
         },
@@ -65,6 +74,7 @@ export default Ember.Component.extend({
                 var gaidit = this.struktura.pievienot(parseInt(this.pievienotVertiba, 10), this.pozicijas.indexOf(this.pievienotPozicija), this.attels);
                 this.set('animacija', Date.now() + gaidit);
                 this.set('dzestIzslegts', false);
+                this.set('mekletIzslegts', false);
                 this.set('pievienotVertiba', Math.round(Math.random() * 99));
                 if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() >= 14) {
                     this.set('pievienotIzslegts', true);
@@ -89,11 +99,31 @@ export default Ember.Component.extend({
             }
             if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0) {
                 this.set('dzestIzslegts', true);
+                this.set('mekletIzslegts', true);
             }
             objekts.attels.clear();
             objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
         },
         meklet() {
+            if (this.mekletIzslegts || (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0)) {
+                this.set('mekletIzslegts', true);
+                return;
+            }
+            if (this.meklesana == 'Vērtība') {
+                var v = parseInt(this.mekletVertiba, 10);
+                this.set('mekletVertiba', isNaN(v) ? 0 : v.toString());
+            } else {
+                this.set('mekletVertiba', '');
+            };
+            var objekts = this;
+            if (Math.floor(new Date() - this.animacija) > 0) {
+                var gaidit = this.struktura.meklet(this.meklesanasVeids.indexOf(this.meklesana), parseInt(this.mekletVertiba, 10), this.attels);
+                this.set('animacija', Date.now() + gaidit);
+                setTimeout(function(){
+                    objekts.attels.clear();
+                    objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
+                }, gaidit);
+            }
         }
     }
 });
