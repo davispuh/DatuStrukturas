@@ -288,6 +288,7 @@ Strukturas[c++].izveidot = function(elementi) {
 
 Strukturas[c++].izveidot = function(elementi) {
     this.struktura = null;
+    this.aktivsElements = null;
     var objekts = this;
     this.elements = function(vertiba) {
         this.vertiba = vertiba;
@@ -311,21 +312,23 @@ Strukturas[c++].izveidot = function(elementi) {
         return elem;
     };
     this.pievienot = function(vertiba, pozicija, attels) {
+        var jauns = new objekts.elements(vertiba);
         if (objekts.struktura) {
             var elem;
             if (pozicija === 1) {
                 elem = objekts.struktura;
-                objekts.struktura = new objekts.elements(vertiba);
+                objekts.struktura = jauns;
                 objekts.struktura.nakosais = elem;
                 elem.ieprieksejais = objekts.struktura;
             } else {
                 elem = objekts.iegutBeigas();
-                elem.nakosais = new objekts.elements(vertiba);
+                elem.nakosais = jauns;
                 elem.nakosais.ieprieksejais = elem;
             }
         } else {
-            objekts.struktura = new objekts.elements(vertiba);
+            objekts.struktura = jauns;
         }
+        objekts.aktivsElements = jauns;
         return 0;
     };
     for (var i = 0; i < elementi; i++) {
@@ -337,6 +340,11 @@ Strukturas[c++].izveidot = function(elementi) {
         teksts.top = ramis.top + ramis.height / 4;
         objekts.katramElementam(function(elem) {
             i++;
+            if (elem === objekts.aktivsElements) {
+                ramis.setStroke(aktivaKrasa);
+            } else {
+                ramis.setStroke(ramjaKrasa);
+            }
             ramis.left = 50 + (ramis.width + 20) * i;
             teksts.setText(elem.vertiba.toString());
             teksts.left = ramis.left + (ramis.width / 4);
@@ -408,8 +416,13 @@ Strukturas[c++].izveidot = function(elementi) {
     this.zimet = function(attels, ramis, teksts, linija) {
         ramis.left = attels.width / 2;
         teksts.left = ramis.left + ramis.width / 4;
-        for (var i = 0; i < objekts.struktura.length; i++) {
-            ramis.top = 50 + (ramis.height + 2) * i;
+        for (var i = objekts.struktura.length - 1; i >= 0; i--) {
+            if (i === 0) {
+                ramis.setStroke(aktivaKrasa);
+            } else {
+                ramis.setStroke(ramjaKrasa);
+            }
+            ramis.top = 50 + (ramis.height + 3) * i;
             teksts.setText(objekts.struktura[objekts.struktura.length - 1 - i].vertiba.toString());
             teksts.top = ramis.top + (ramis.height / 4);
             attels.add(ramis);
@@ -443,8 +456,13 @@ Strukturas[c++].izveidot = function(elementi) {
     this.zimet = function(attels, ramis, teksts, linija) {
         ramis.top = 70 + ramis.height;
         teksts.top = ramis.top + ramis.height / 4;
-        for (var i = 0; i < objekts.struktura.length; i++) {
-            ramis.left = 200 + (ramis.width + 2) * i;
+        for (var i = objekts.struktura.length - 1; i >= 0; i--) {
+            if (i === 0 || i === objekts.struktura.length - 1) {
+                ramis.setStroke(aktivaKrasa);
+            } else {
+                ramis.setStroke(ramjaKrasa);
+            }
+            ramis.left = 200 + (ramis.width + 3) * i;
             teksts.setText(objekts.struktura[i].vertiba.toString());
             teksts.left = ramis.left + (ramis.width / 4);
             attels.add(ramis);
@@ -494,6 +512,11 @@ Strukturas[c++].izveidot = function(elementi) {
         for (var i = 0; i < objekts.struktura.length; i++) {
             var rinda = Math.floor(Math.log(i + 1) / Math.LN2);
             ramis.top = 50 + (ramis.height + 20) * rinda;
+            if (i === objekts.struktura.length - 1) {
+                ramis.setStroke(aktivaKrasa);
+            } else {
+                ramis.setStroke(ramjaKrasa);
+            }
             if (i === 0) {
                 ramis.left = attels.width / 2;
             } else {
