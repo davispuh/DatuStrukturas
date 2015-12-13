@@ -203,9 +203,82 @@ Strukturas[c++].izveidot = function(elementi) {
     this.dzest = function(atslega, attels) {
         var ieprieks = null;
         var elem = objekts.struktura;
+        var nkElem = null;
+        var fn = function(t, e, iep) {
+            setTimeout(function(){
+                e.zimejums[0].setStroke(iezimetaKrasa);
+                if (iep) {
+                    iep.zimejums[0].setStroke(ramjaKrasa);
+                }
+                attels.renderAll();
+            }, t);
+        };
+        var i = 0;
+        var sign = '';
+        var size = 0;
         while (elem) {
+            i++;
             if (elem.atslega === atslega) {
                 objekts.atslegas.push(elem.atslega);
+                if (attels) {
+                    fn(i * 300, elem, ieprieks);
+                    setTimeout(function(){
+                        if (elem.nakosais) {
+                            for (i = 3; i < elem.zimejums.length; i++) {
+                                elem.zimejums[i].animate('left', '-=' + (elem.zimejums[0].width / 2).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                            }
+                        }
+                        if (ieprieks) {
+                            if (elem.nakosais) {
+                                sign = '+=';
+                                size = ieprieks.zimejums[0].width;
+                            } else
+                            {
+                                sign = '-=';
+                                size = 0;
+                            }
+                            ieprieks.zimejums[3].animate('width', sign + (size + 20).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                            for (i = 4; i < ieprieks.zimejums.length; i++) {
+                                ieprieks.zimejums[i].animate('left', sign + (size + 20).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                            }
+                        }
+                    }, i * 300);
+                    setTimeout(function(){
+                        for (i = 0; i < elem.zimejums.length; i++) {
+                           if (i <= 2) {
+                               elem.zimejums[i].animate('top', '-=' + (elem.zimejums[0].height + 20).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                           } else {
+                               attels.remove(elem.zimejums[i]);
+                           }
+                        }
+                        if (ieprieks) {
+                            if (elem.nakosais) {
+                                sign = '-=';
+                                size = ieprieks.zimejums[0].width;
+                            } else {
+                                sign = '+=';
+                                size = 0;
+                            }
+                            ieprieks.zimejums[3].animate('width', sign + (size + 20).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                            for (i = 4; i < ieprieks.zimejums.length; i++) {
+                                ieprieks.zimejums[i].animate('left', sign + (size + 20).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                            }
+                        }
+                        if (elem.nakosais) {
+                            nkElem = elem.nakosais;
+                            while (nkElem) {
+                                for (i = 0; i < nkElem.zimejums.length; i++) {
+                                    nkElem.zimejums[i].animate('left', '-=' + (elem.zimejums[0].width + 20).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                                }
+                                nkElem = nkElem.nakosais;
+                            }
+                        } else if (ieprieks) {
+                            for (i = 3; i < ieprieks.zimejums.length; i++) {
+                                attels.remove(ieprieks.zimejums[i]);
+                            }
+                        }
+                    }, i * 300 + 500);
+                }
                 if (objekts.aktivsElements === elem) {
                     objekts.aktivsElements = elem.nakosais;
                 }
@@ -217,13 +290,16 @@ Strukturas[c++].izveidot = function(elementi) {
                 if (!objekts.aktivsElements) {
                     objekts.aktivsElements = ieprieks;
                 }
-                return 0;
+                return i * 300 + 1200;
+            }
+            if (attels) {
+                fn(i * 300, elem, ieprieks);
             }
             ieprieks = elem;
             elem = elem.nakosais;
         }
-        return 0;
-    }
+        return i * 300 + 100;
+    };
     this.meklet = function(meklesana, vertiba, attels) {
         var ieprieks = null;
         var elem = objekts.struktura;
@@ -235,14 +311,14 @@ Strukturas[c++].izveidot = function(elementi) {
                 if (e === v) {
                     if (pv) {
                         pv.zimejums[0].setStroke(ramjaKrasa);
-                    };
+                    }
                     e.zimejums[0].setStroke(aktivaKrasa);
                 } else {
                     e.zimejums[0].setStroke(iezimetaKrasa);
                 }
                 if (iep && iep !== v) {
                     iep.zimejums[0].setStroke(ramjaKrasa);
-                };
+                }
                 attels.renderAll();
             }, t);
         };
@@ -280,7 +356,7 @@ Strukturas[c++].izveidot = function(elementi) {
             objekts.aktivsElements = null;
         }
         return i * 300 + 100;
-    }
+    };
     for (var i = 0; i < elementi; i++) {
         objekts.pievienot(dabutVertibu(), 0);
     }

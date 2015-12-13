@@ -93,28 +93,33 @@ export default Ember.Component.extend({
                 return;
             }
             var objekts = this;
-            var gaidit = this.struktura.dzest(this.dzestAtslega.charAt(0).toUpperCase(), this.attels);
-            if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() < 14) {
-                this.set('pievienotIzslegts', false);
+            if (Math.floor(new Date() - this.animacija) > 0) {
+                var gaidit = this.struktura.dzest(this.dzestAtslega.charAt(0).toUpperCase(), this.attels);
+                if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() < 14) {
+                    this.set('pievienotIzslegts', false);
+                }
+                if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0) {
+                    this.set('dzestIzslegts', true);
+                    this.set('mekletIzslegts', true);
+                }
+                this.set('animacija', Date.now() + gaidit);
+                setTimeout(function(){
+                    objekts.attels.clear();
+                    objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
+                }, gaidit);
             }
-            if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0) {
-                this.set('dzestIzslegts', true);
-                this.set('mekletIzslegts', true);
-            }
-            objekts.attels.clear();
-            objekts.struktura.zimet(objekts.attels, objekts.elements, objekts.teksts, objekts.linija);
         },
         meklet() {
             if (this.mekletIzslegts || (this.struktura.elementuSkaits && this.struktura.elementuSkaits() <= 0)) {
                 this.set('mekletIzslegts', true);
                 return;
             }
-            if (this.meklesana == 'Vērtība') {
+            if (this.meklesana === 'Vērtība') {
                 var v = parseInt(this.mekletVertiba, 10);
                 this.set('mekletVertiba', isNaN(v) ? 0 : v.toString());
             } else {
                 this.set('mekletVertiba', '');
-            };
+            }
             var objekts = this;
             if (Math.floor(new Date() - this.animacija) > 0) {
                 var gaidit = this.struktura.meklet(this.meklesanasVeids.indexOf(this.meklesana), parseInt(this.mekletVertiba, 10), this.attels);
