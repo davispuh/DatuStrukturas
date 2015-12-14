@@ -116,7 +116,6 @@ Strukturas[c++].izveidot = function(elementi) {
             var platums;
             var augstums;
             var skaits = 1;
-            var poz = 0;
             var esk;
             if (pozicija === 3 && this.aktivsElements === objekts.struktura) {
                 pozicija = 1;
@@ -129,7 +128,7 @@ Strukturas[c++].izveidot = function(elementi) {
                 if (pozicija === 2) {
                     elem = objekts.struktura;
                     while (elem !== this.aktivsElements && elem) {
-                        poz++;
+                        skaits++;
                         elem = elem.nakosais;
                     }
                 }
@@ -143,9 +142,9 @@ Strukturas[c++].izveidot = function(elementi) {
                         obj.setText(jauns.atslega.toString());
                     }
                     if (pozicija === 2) {
-                        obj.left += (poz + 1) * (platums + 20);
+                        obj.left += skaits * (platums + 20);
                         if (i >= 3) {
-                            obj.set({x1: obj.x1 + (poz + 1) * (platums + 20), x2: obj.x2 + (poz + 1) * (platums + 20)});
+                            obj.set({x1: obj.x1 + skaits * (platums + 20), x2: obj.x2 + skaits * (platums + 20)});
                         }
                     }
                     if (i < 3) {
@@ -221,16 +220,29 @@ Strukturas[c++].izveidot = function(elementi) {
                 obj = jauns;
             }
             if (attels) {
-                if (pozicija === 1 || pozicija === 2) {
-                    if (jauns.nakosais) {
+                if (pozicija === 1 || pozicija === 2 || pozicija === 3) {
+                    if (!jauns.nakosais) {
+                        elem = objekts.aktivsElements;
+                    }
+                    if (pozicija === 3) {
+                        esk = elem;
+                        elem = jauns;
+                        for (i = 3; i <= 5; i++) {
+                             elem.zimejums[i].set({x1: elem.zimejums[i].x1 + (platums + 20) * skaits, x2: elem.zimejums[i].x2 + (platums + 20) * skaits});
+                        }
+                    }
+                    (function(e) {
                         setTimeout(function(){
-                            jauns.zimejums[3].set({x2: jauns.zimejums[3].x2 - 30});
-                            jauns.zimejums[4].set({x1: jauns.zimejums[4].x1 - 30, x2: jauns.zimejums[4].x2 - 30});
-                            jauns.zimejums[5].set({x1: jauns.zimejums[5].x1 - 30, x2: jauns.zimejums[5].x2 - 30});
-                            attels.add(jauns.zimejums[3]);
-                            attels.add(jauns.zimejums[4]);
-                            attels.add(jauns.zimejums[5]);
-                        }, (pozicija === 2) ? 1300 : 750);
+                            e.zimejums[3].set({x2: e.zimejums[3].x2 - 30});
+                            e.zimejums[4].set({x1: e.zimejums[4].x1 - 30, x2: e.zimejums[4].x2 - 30});
+                            e.zimejums[5].set({x1: e.zimejums[5].x1 - 30, x2: e.zimejums[5].x2 - 30});
+                            attels.add(e.zimejums[3]);
+                            attels.add(e.zimejums[4]);
+                            attels.add(e.zimejums[5]);
+                        }, (pozicija === 2 || pozicija === 3) ? 1300 : 750);
+                    }(elem));
+                    if (pozicija === 3) {
+                        elem = esk;
                     }
                 }
                 if (pozicija === 0 || pozicija === 3) {
@@ -240,8 +252,8 @@ Strukturas[c++].izveidot = function(elementi) {
                     var rad = window.fabric.util.degreesToRadians(-40);
                     var ls;
                     var le;
-                    elem.zimejums[3].x1 = jauns.zimejums[3].x1;
-                    elem.zimejums[3].x2 = jauns.zimejums[3].x2;
+                    elem.zimejums[3].x1 = objekts.struktura.zimejums[3].x1;
+                    elem.zimejums[3].x2 = objekts.struktura.zimejums[3].x2;
                     var centrs = new window.fabric.Point(elem.zimejums[3].x1, elem.zimejums[3].y1);
                     var fn = function(x) {
                         setTimeout(function(){
@@ -259,8 +271,8 @@ Strukturas[c++].izveidot = function(elementi) {
                         }, 700);
                     };
                     for (i = 3; i <= 5; i++) {
-                        elem.zimejums[i].x1 = jauns.zimejums[i].x1;
-                        elem.zimejums[i].x2 = jauns.zimejums[i].x2;
+                        elem.zimejums[i].x1 = objekts.struktura.zimejums[i].x1;
+                        elem.zimejums[i].x2 = objekts.struktura.zimejums[i].x2;
                         ls = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x1, elem.zimejums[i].y1), centrs, rad);
                         le = window.fabric.util.rotatePoint(new window.fabric.Point(elem.zimejums[i].x2, elem.zimejums[i].y2), centrs, rad);
                         elem.zimejums[i].set({x1: ls.x, y1: ls.y, x2: le.x, y2: le.y});
@@ -278,6 +290,14 @@ Strukturas[c++].izveidot = function(elementi) {
                     for (i = 4; i <= 5; i++) {
                         elem.zimejums[i].animate('left', apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                 }}, (pozicija === 1) ? 850 : (pozicija === 2) ? 1350 : 0);
+                if (pozicija === 3) {
+                setTimeout(function(){
+                    jauns.zimejums[3].animate('width', '+=30', { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    for (i = 4; i <= 5; i++) {
+                        jauns.zimejums[i].animate('left', '+=30', { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                }}, 1450);
+                    gaidit += 700;
+                }
             }
         } else {
             objekts.struktura = jauns;
