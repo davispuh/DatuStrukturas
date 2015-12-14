@@ -87,19 +87,43 @@ Strukturas[c++].izveidot = function(elementi) {
         return i;
     };
     this.pievienot = function(vertiba, pozicija, attels) {
+        if ((pozicija === 2 || pozicija === 3) && !this.aktivsElements) {
+            return 0;
+        }
         var jauns = new objekts.elements(vertiba);
         var i;
         var gaidit = 1300;
+        var fnIezimet = function(t, e, iep) {
+            setTimeout(function(){
+                e.zimejums[0].setStroke(iezimetaKrasa);
+                if (iep) {
+                    iep.zimejums[0].setStroke(ramjaKrasa);
+                }
+                attels.renderAll();
+            }, t);
+        };
         if (objekts.struktura) {
             var elem;
             var obj;
             var platums;
             var augstums;
             var skaits = 1;
+            var poz = 0;
+            var esk;
+            if (pozicija === 3 && this.aktivsElements === objekts.struktura) {
+                pozicija = 1;
+            }
             if (attels) {
                 if (objekts.struktura.zimejums.length > 0) {
                     platums = objekts.struktura.zimejums[0].width;
                     augstums = objekts.struktura.zimejums[0].height;
+                }
+                if (pozicija === 2) {
+                    elem = objekts.struktura;
+                    while (elem !== this.aktivsElements && elem) {
+                        poz++;
+                        elem = elem.nakosais;
+                    }
                 }
                 for (i = 0; i < objekts.struktura.zimejums.length; i++) {
                     obj = window.fabric.util.object.clone(objekts.struktura.zimejums[i]);
@@ -110,9 +134,18 @@ Strukturas[c++].izveidot = function(elementi) {
                     } else if (i === 2) {
                         obj.setText(jauns.atslega.toString());
                     }
+                    if (pozicija === 2) {
+                        obj.left += (poz + 1) * (platums + 20);
+                        if (i >= 3) {
+                            obj.set({x1: obj.x1 + (poz + 1) * (platums + 20), x2: obj.x2 + (poz + 1) * (platums + 20)});
+                        }
+                    }
                     if (i < 3) {
                         obj.top -= augstums + augstums / 4;
                         attels.add(obj);
+                    }
+                    if (i === 0) {
+                        attels.sendToBack(obj);
                     }
                     jauns.zimejums.push(obj);
                 }
@@ -129,22 +162,70 @@ Strukturas[c++].izveidot = function(elementi) {
                 } while (elem);
                 elem = objekts.struktura;
                 obj = elem;
-                setTimeout(function(){
-                    elem.zimejums[3].set({x2: elem.zimejums[3].x2 - 30});
-                    elem.zimejums[4].set({x1: elem.zimejums[4].x1 - 30, x2: elem.zimejums[4].x2 - 30});
-                    elem.zimejums[5].set({x1: elem.zimejums[5].x1 - 30, x2: elem.zimejums[5].x2 - 30});
-                    attels.add(elem.zimejums[3]);
-                    attels.add(elem.zimejums[4]);
-                    attels.add(elem.zimejums[5]);
-                }, 750);
+            } else if (pozicija === 2 || pozicija === 3) {
+                if (pozicija === 2) {
+                    elem = objekts.aktivsElements.nakosais;
+                    objekts.aktivsElements.nakosais = jauns;
+                    obj = elem;
+                    elem = jauns;
+                    gaidit += 500;
+                } else {
+                    elem = objekts.struktura;
+                    obj = null;
+                    esk = this.elementuSkaits();
+                    fnIezimet(skaits * (500 / esk), elem, obj);
+                    while (elem.nakosais !== objekts.aktivsElements && elem.nakosais) {
+                        skaits++;
+                        if (attels) {
+                            fnIezimet(skaits * (500 / esk), elem, obj);
+                        }
+                        obj = elem;
+                        elem = elem.nakosais;
+                    }
+                    fnIezimet((skaits + 1) * (500 / esk), elem, obj);
+                    elem.nakosais = jauns;
+                    obj = objekts.aktivsElements;
+                }
+                jauns.nakosais = obj;
+                while (obj) {
+                    for (i = 0; i < obj.zimejums.length; i++) {
+                        obj.zimejums[i].animate('left', '+=' + (platums + 20).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    }
+                    obj = obj.nakosais;
+                }
+                obj = jauns;
             } else {
+                esk = this.elementuSkaits();
                 elem = objekts.struktura;
+                obj = null;
                 while (elem.nakosais) {
+                   if (attels) {
+                       fnIezimet(skaits * (500 / esk), elem, obj);
+                   }
+                   obj = elem;
                    elem = elem.nakosais;
                    skaits++;
                 }
-                elem.nakosais = jauns;
                 if (attels) {
+                    fnIezimet(skaits * (500 / esk), elem, obj);
+                }
+                elem.nakosais = jauns;
+                obj = jauns;
+            }
+            if (attels) {
+                if (pozicija === 1 || pozicija === 2) {
+                    if (jauns.nakosais) {
+                        setTimeout(function(){
+                            jauns.zimejums[3].set({x2: jauns.zimejums[3].x2 - 30});
+                            jauns.zimejums[4].set({x1: jauns.zimejums[4].x1 - 30, x2: jauns.zimejums[4].x2 - 30});
+                            jauns.zimejums[5].set({x1: jauns.zimejums[5].x1 - 30, x2: jauns.zimejums[5].x2 - 30});
+                            attels.add(jauns.zimejums[3]);
+                            attels.add(jauns.zimejums[4]);
+                            attels.add(jauns.zimejums[5]);
+                        }, (pozicija === 2) ? 1300 : 750);
+                    }
+                }
+                if (pozicija === 0 || pozicija === 3) {
                     for (i = 0; i < 3; i++) {
                         jauns.zimejums[i].animate('left', '+=' + ((platums + 20) * skaits).toString(), { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                     }
@@ -179,19 +260,16 @@ Strukturas[c++].izveidot = function(elementi) {
                         fn(i);
                     }
                 }
-                obj = jauns;
-            }
-            if (attels) {
                 setTimeout(function(){
                     for (i = 0; i < 3; i++) {
                         obj.zimejums[i].animate('top', '+=' + (augstums + augstums / 4).toString(), { duration: 700, onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                 }}, pozicija === 1 ? 0 : 500);
                 setTimeout(function(){
-                    var apjoms = pozicija === 1 ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
-                    elem.zimejums[3].animate(pozicija === 1 ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
+                    var apjoms = (pozicija === 1 || pozicija === 2) ? '+=30' : '+=' + ((skaits - 1) * (platums + 20)).toString();
+                    elem.zimejums[3].animate((pozicija === 1 || pozicija === 2) ? 'width' : 'left' , apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
                     for (i = 4; i <= 5; i++) {
                         elem.zimejums[i].animate('left', apjoms, { onChange: attels.renderAll.bind(attels), easing: window.fabric.util.ease.easeInQuad });
-                }}, pozicija === 1 ? 850 : 0);
+                }}, (pozicija === 1) ? 850 : (pozicija === 2) ? 1350 : 0);
             }
         } else {
             objekts.struktura = jauns;
