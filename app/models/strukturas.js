@@ -3,42 +3,50 @@ var Strukturas = [
     {
         id: "vienkars_saraksts",
         nosaukums: "Vienkāršsaistīts saraksts",
-        izveidot: null
+        izveidot: null,
+        varKartot: true
     },
     {
         id: "divkars_saraksts",
         nosaukums: "Divkāršsaistīts saraksts",
-        izveidot: null
+        izveidot: null,
+        varKartot: true
     },
     {
         id: "steks",
         nosaukums: "Steks",
-        izveidot: null
+        izveidot: null,
+        varKartot: false
     },
     {
         id: "rinda",
         nosaukums: "Rinda",
-        izveidot: null
+        izveidot: null,
+        varKartot: false
     },
     {
         id: "kaudze",
         nosaukums: "Kaudze",
-        izveidot: null
+        izveidot: null,
+        varKartot: false
     },
     {
         id: "binars_koks",
         nosaukums: "Binārs koks",
-        izveidot: null
+        izveidot: null,
+        varKartot: false
     },
     {
         id: "avl_koks",
         nosaukums: "AVL koks",
-        izveidot: null
+        izveidot: null,
+        varKartot: false
     },
     {
         id: "meklesanas_koks",
         nosaukums: "Meklēšanas koks",
-        izveidot: null
+        izveidot: null,
+        varKartot: true
     }
 ];
 
@@ -512,6 +520,9 @@ Strukturas[c++].izveidot = function(elementi) {
     };
     this.katramElementam = function(fn) {
         var elem = objekts.struktura;
+        if (!elem) {
+            return;
+        }
         fn(elem);
         while (elem.nakosais) {
             elem = elem.nakosais;

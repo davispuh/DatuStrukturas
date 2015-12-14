@@ -36,6 +36,7 @@ export default Ember.Component.extend({
     pievienotPozicija: 'Beigās',
     algoritmi: ['Izvēles šķirošana', 'Iestarpinājuma šķirošanas', 'Burbuļa metode'],
     kartosana: 'Izvēles šķirošana',
+    kartotIzslegts: true,
     veidi: ['Atslēga'],
     dzestVeids: 'Atslēga',
     dzestAtslega: 'A',
@@ -53,7 +54,7 @@ export default Ember.Component.extend({
                 this.set('elementi', 10);
             }
             this.set('pievienotIzslegts', false);
-            this.struktura = this.get('struktura').izveidot(this.elementi);
+            this.set('struktura', this.get('struktura').izveidot(this.elementi));
             if (this.struktura.elementuSkaits && this.struktura.elementuSkaits() > 0) {
                 this.set('dzestIzslegts', false);
                 this.set('mekletIzslegts', false);

@@ -15,6 +15,7 @@
             </div>
             <div class="small-6 columns"><a {{action "pievienot"}} disabled={{if pievienotIzslegts 'disabled'}} class="button postfix">Pievienot elementu</a></div>
         </li>
+        {{#if struktura.varKartot}}
         <li class="row collapse">
             <div class="small-6 columns">
                 <select onchange={{action (mut kartosana) value="target.value"}}>
@@ -23,8 +24,9 @@
                     {{/each}}
                 </select>
             </div>
-            <div class="small-6 columns"><a {{action "kartot"}} class="button postfix">Kārtot</a></div>
+            <div class="small-6 columns"><a {{action "kartot"}} disabled={{if kartotIzslegts 'disabled'}}  class="button postfix">Kārtot</a></div>
         </li>
+        {{/if}}
         <li class="row collapse">
             <div class="small-3 columns">{{input value=dzestAtslega}}</div>
             <div class="small-3 columns">
